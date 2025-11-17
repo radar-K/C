@@ -3,7 +3,6 @@
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-// Skapa en klient EN gång, på modulnivå
 const queryClient = new QueryClient();
 
 type ProvidersProps = {
