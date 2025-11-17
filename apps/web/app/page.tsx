@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchProducts, type Product } from "./lib/api";
+import ProductCard from "./components/ProductCard";
 
 export default function Page() {
   const {
@@ -13,24 +14,20 @@ export default function Page() {
     queryFn: fetchProducts,
   });
 
-  if (isLoading) return <p>Laddar...</p>;
-  if (error) return <p>Något gick fel</p>;
+  if (isLoading) return <main className="p-10">Laddar...</main>;
+  if (error || !products) return <main className="p-10">Något gick fel</main>;
 
   return (
-    <main>
-      <h1>Produkter</h1>
-      <ul>
-        {products?.map((p) => (
-          <li key={p.id}>
-            <strong>{p.name}</strong> {p.price} kr
-            {p.imageUrl && (
-              <div>
-                <img src={p.imageUrl} alt={p.name} width={150} height={150} />
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+    <main className="p-10">
+      <section className="mx-auto max-w-6xl">
+        <h1 className="mb-8 text-3xl font-bold">Våra Produkter</h1>
+
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {products.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
