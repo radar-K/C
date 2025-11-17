@@ -1,3 +1,4 @@
+// app/lib/api.ts
 export type Product = {
   id: number;
   name: string;
@@ -23,30 +24,16 @@ export async function fetchProducts(): Promise<Product[]> {
   console.log("Strapi JSON:", json);
 
   return json.data.map((item: any) => {
-    // Fungerar både om datan ligger i item.attributes eller direkt i item
-    const attrs = item.attributes ?? item ?? {};
+    // Strapi v4: fält ligger i item.attributes
+    const attrs = item.attributes ?? item;
 
-    // --- Bild (valfri) ---
-    let imageUrl: string | undefined;
+    // hantera om det saknas bild utan att krascha
+    const imgData =
+      attrs.image?.data?.attributes?.url ??
+      attrs.image?.attributes?.url ??
+      attrs.image?.url;
 
-    const imageField = attrs.image;
-    if (imageField) {
-      // single media: { data: { attributes: { url } } }
-      const media = imageField.data ?? imageField;
-
-      if (Array.isArray(media)) {
-        const first = media[0];
-        if (first?.attributes?.url) {
-          imageUrl = `${STRAPI_URL}${first.attributes.url}`;
-        } else if (first?.url) {
-          imageUrl = `${STRAPI_URL}${first.url}`;
-        }
-      } else if (media?.attributes?.url) {
-        imageUrl = `${STRAPI_URL}${media.attributes.url}`;
-      } else if (media?.url) {
-        imageUrl = `${STRAPI_URL}${media.url}`;
-      }
-    }
+    const imageUrl = imgData ? `${STRAPI_URL}${imgData}` : undefined;
 
     return {
       id: item.id,
