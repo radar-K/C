@@ -1,17 +1,13 @@
-// apps/web/app/layout.tsx
-import type { ReactNode } from "react";
 import "./globals.css";
-import { Providers } from "./providers"; // ✅ för named export
-console.log("Providers är:", Providers);
+import Providers from "./providers";
 
-export const metadata = {
-  title: "E-handel",
-  description: "Min shop",
-};
-
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="sv">
+    <html lang="en">
       <body>
         <Providers>{children}</Providers>
       </body>
