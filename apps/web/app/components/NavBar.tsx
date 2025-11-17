@@ -9,7 +9,7 @@ export function Navbar() {
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <header className="navbar">
+    <header className="navbar text-black">
       <div className="navbar-inner">
         <Link href="/" className="navbar-logo">
           En affär med vackra föremål för den som är intresserad
@@ -37,7 +37,10 @@ export function Navbar() {
               padding: "0.5rem",
             }}
           >
-            <ShoppingCart style={{ width: "20px", height: "20px" }} />
+            <ShoppingCart
+              className="text-black"
+              style={{ width: "20px", height: "20px" }}
+            />
             {itemCount > 0 && (
               <span
                 style={{

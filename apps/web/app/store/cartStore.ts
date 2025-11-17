@@ -16,6 +16,8 @@ export type CartItem = Product & {
 export type CartStore = {
   items: CartItem[];
   addToCart: (product: Product) => void;
+  increaseQuantity: (id: number) => void;
+  decreaseQuantity: (id: number) => void;
   removeFromCart: (id: number) => void;
   clearCart: () => void;
   getTotal: () => number;
@@ -60,6 +62,49 @@ const useCartStore = create<CartStore>((set, get) => ({
 
       return {
         items: [...state.items, { ...product, quantity: 1 }],
+      };
+    }),
+
+  increaseQuantity: (id) =>
+    set((state) => {
+      const item = state.items.find((i) => i.id === id);
+      if (!item) return state;
+
+      trackEvent("add_to_cart", {
+        items: [
+          { id: item.id, name: item.name, price: item.price, quantity: item.quantity + 1 },
+        ],
+      });
+
+      return {
+        items: state.items.map((i) =>
+          i.id === id ? { ...i, quantity: i.quantity + 1 } : i
+        ),
+      };
+    }),
+
+  decreaseQuantity: (id) =>
+    set((state) => {
+      const item = state.items.find((i) => i.id === id);
+      if (!item) return state;
+
+      if (item.quantity <= 1) {
+        trackEvent("remove_from_cart", {
+          items: [{ id: item.id, name: item.name, price: item.price, quantity: 1 }],
+        });
+        return { items: state.items.filter((i) => i.id !== id) };
+      }
+
+      trackEvent("remove_from_cart", {
+        items: [
+          { id: item.id, name: item.name, price: item.price, quantity: 1 },
+        ],
+      });
+
+      return {
+        items: state.items.map((i) =>
+          i.id === id ? { ...i, quantity: i.quantity - 1 } : i
+        ),
       };
     }),
 

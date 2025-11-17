@@ -15,16 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="sv">
-      <body>
+      <body className="bg-[var(--background)] text-[var(--foreground)] antialiased">
         <Providers>
           <Navbar />
-          <main
-            style={{
-              maxWidth: "1200px",
-              margin: "0 auto",
-              padding: "2rem 1.5rem",
-            }}
-          >
+          <main className="mx-auto w-full max-w-6xl px-6 py-10 sm:px-8 lg:max-w-7xl lg:px-16 lg:py-16">
             {children}
           </main>
           <Analytics />
