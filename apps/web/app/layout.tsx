@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Providers } from "./providers";
 import { Navbar } from "../app/components/NavBar";
+import Analytics from "./analytics";
 
 export const metadata = {
   title: "E-handel Shop",
@@ -26,6 +27,7 @@ export default function RootLayout({
           >
             {children}
           </main>
+          <Analytics />
         </Providers>
       </body>
     </html>
