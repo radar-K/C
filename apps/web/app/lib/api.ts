@@ -7,9 +7,19 @@ export type Product = {
   category: string;
   inStock: boolean;
   imageUrl?: string;
+  slug: string;
 };
 
 const STRAPI_URL = "http://localhost:1337";
+
+const slugify = (value: string) =>
+  value
+    .toString()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
 
 export async function fetchProducts(): Promise<Product[]> {
   const res = await fetch(`${STRAPI_URL}/api/products?populate=image`, {
@@ -35,14 +45,24 @@ export async function fetchProducts(): Promise<Product[]> {
 
     const imageUrl = imgData ? `${STRAPI_URL}${imgData}` : undefined;
 
+    const name = attrs.name ?? `produkt-${item.id}`;
+
     return {
       id: item.id,
-      name: attrs.name,
+      name,
       price: attrs.price,
       description: attrs.description,
       category: attrs.category,
       inStock: attrs.inStock,
       imageUrl,
+      slug: attrs.slug ?? slugify(name),
     };
   });
+}
+
+export async function fetchProductBySlug(
+  slug: string
+): Promise<Product | null> {
+  const products = await fetchProducts();
+  return products.find((product) => product.slug === slug) ?? null;
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { formatGAItems, sendGAEvent } from "../lib/analytics";
 import useCartStore from "../store/cartStore";
 
 const formatPrice = (value: number) =>
@@ -11,6 +13,7 @@ export default function CartPage() {
   const increaseQuantity = useCartStore((state) => state.increaseQuantity);
   const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const router = useRouter();
 
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -116,8 +119,24 @@ export default function CartPage() {
             <span>{formatPrice(subtotal)} kr</span>
           </div>
 
-          <button className="mt-6 w-full rounded-full bg-black py-3 text-center text-base font-semibold text-white transition hover:bg-gray-900">
+          <button
+            onClick={() => {
+              sendGAEvent("begin_checkout", {
+                currency: "SEK",
+                value: subtotal,
+                items: formatGAItems(items),
+              });
+              router.push("/checkout");
+            }}
+            className="mt-6 w-full rounded-full bg-black py-3 text-center text-base font-semibold text-white transition hover:bg-gray-900"
+          >
             Gå till kassan
+          </button>
+          <button
+            onClick={() => router.push("/")}
+            className="mt-3 w-full text-center text-sm font-medium text-gray-500 hover:text-gray-800"
+          >
+            ← Tillbaka till produkter
           </button>
         </section>
       </div>

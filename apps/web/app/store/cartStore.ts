@@ -2,12 +2,7 @@
 
 import { create } from "zustand";
 import type { Product } from "../lib/api";
-
-function trackEvent(name: string, params: any = {}) {
-  if (typeof window !== "undefined" && (window as any).gtag) {
-    (window as any).gtag("event", name, params);
-  }
-}
+import { sendGAEvent } from "../lib/analytics";
 
 export type CartItem = Product & {
   quantity: number;
@@ -31,7 +26,7 @@ const useCartStore = create<CartStore>((set, get) => ({
       const existing = state.items.find((i) => i.id === product.id);
 
       if (existing) {
-        trackEvent("add_to_cart", {
+        sendGAEvent("add_to_cart", {
           items: [
             {
               id: product.id,
@@ -49,7 +44,7 @@ const useCartStore = create<CartStore>((set, get) => ({
         };
       }
 
-      trackEvent("add_to_cart", {
+      sendGAEvent("add_to_cart", {
         items: [
           {
             id: product.id,
@@ -70,7 +65,7 @@ const useCartStore = create<CartStore>((set, get) => ({
       const item = state.items.find((i) => i.id === id);
       if (!item) return state;
 
-      trackEvent("add_to_cart", {
+      sendGAEvent("add_to_cart", {
         items: [
           { id: item.id, name: item.name, price: item.price, quantity: item.quantity + 1 },
         ],
@@ -89,13 +84,13 @@ const useCartStore = create<CartStore>((set, get) => ({
       if (!item) return state;
 
       if (item.quantity <= 1) {
-        trackEvent("remove_from_cart", {
+        sendGAEvent("remove_from_cart", {
           items: [{ id: item.id, name: item.name, price: item.price, quantity: 1 }],
         });
         return { items: state.items.filter((i) => i.id !== id) };
       }
 
-      trackEvent("remove_from_cart", {
+      sendGAEvent("remove_from_cart", {
         items: [
           { id: item.id, name: item.name, price: item.price, quantity: 1 },
         ],
@@ -113,7 +108,7 @@ const useCartStore = create<CartStore>((set, get) => ({
       const item = state.items.find((i) => i.id === id);
 
       if (item) {
-        trackEvent("remove_from_cart", {
+        sendGAEvent("remove_from_cart", {
           items: [
             {
               id: item.id,
@@ -131,7 +126,7 @@ const useCartStore = create<CartStore>((set, get) => ({
     }),
 
   clearCart: () => {
-    trackEvent("clear_cart");
+    sendGAEvent("clear_cart");
     return set({ items: [] });
   },
 
