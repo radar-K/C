@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchProducts, type Product } from "./lib/api"; // kolla sökvägen!
+import { fetchProducts, type Product } from "./lib/api";
 
 export default function Page() {
   const {
@@ -17,7 +17,7 @@ export default function Page() {
   if (error) return <p>Något gick fel</p>;
 
   return (
-    <main className="p-10">
+    <main>
       <h1>Produkter</h1>
       <ul>
         {products?.map((p) => (
@@ -25,11 +25,7 @@ export default function Page() {
             <strong>{p.name}</strong> {p.price} kr
             {p.imageUrl && (
               <div>
-                <img
-                  src={p.imageUrl}
-                  alt={p.name}
-                  style={{ maxWidth: 150, display: "block" }}
-                />
+                <img src={p.imageUrl} alt={p.name} width={150} height={150} />
               </div>
             )}
           </li>
