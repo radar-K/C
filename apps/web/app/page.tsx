@@ -19,10 +19,10 @@ export default function Page() {
 
   return (
     <main className="p-10">
-      <section className="mx-auto max-w-6xl">
+      <section className="mx-auto max-w-7xl">
         <h1 className="mb-8 text-3xl font-bold">Våra Produkter</h1>
 
-        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}

@@ -14,9 +14,9 @@ export default function ProductCard({ product }: Props) {
   const description = product.description;
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-xl border bg-white shadow-sm">
+    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       {product.imageUrl && (
-        <div className="relative aspect-[4/3] w-full">
+        <div className="relative aspect-square w-full overflow-hidden">
           <img
             src={product.imageUrl}
             alt={product.name}
@@ -25,25 +25,29 @@ export default function ProductCard({ product }: Props) {
         </div>
       )}
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <h2 className="text-lg font-semibold">{product.name}</h2>
+      <div className="flex flex-1 flex-col p-5">
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">
+          {product.name}
+        </h2>
 
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-gray-600 mb-4 line-clamp-3 flex-grow">
           {Array.isArray(description) || typeof description === "object" ? (
-            // Strapi rich text / blocks
             <BlocksRenderer content={description} />
           ) : (
-            // Vanlig text-string
             <p>{description}</p>
           )}
         </div>
 
-        <div className="mt-auto flex items-center justify-between pt-4">
-          <span className="text-base font-semibold">{product.price} kr</span>
+        <div className="mt-auto">
+          <div className="mb-3">
+            <span className="text-xl font-bold text-gray-900">
+              {product.price} kr
+            </span>
+          </div>
 
           <button
             onClick={() => addToCart(product)}
-            className="rounded bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 active:translate-y-px"
+            className="w-full rounded-lg bg-black px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 active:translate-y-px"
           >
             Lägg i kundkorg
           </button>
